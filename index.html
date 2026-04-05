@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Gowsikan LV — Software Test Engineer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #f5f0e8;
+    --cream-dark: #ede7d9;
+    --ink: #1a1410;
+    --ink-mid: #3d342a;
+    --ink-light: #7a6e63;
+    --rust: #c4490c;
+    --rust-light: #e05a1a;
+    --sage: #4a6741;
+    --sage-light: #6b9467;
+    --warm-white: #faf8f4;
+    --border: #d4cbbf;
+    --border-light: #e8e2d8;
+    --shadow: rgba(26,20,16,0.12);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', Georgia, sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ─── NOISE TEXTURE OVERLAY ─── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.5;
+  }
+
+  a { color: inherit; text-decoration: none; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 28px; }
+
+  /* ─── NAV ─── */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: var(--cream);
+    border-bottom: 2px solid var(--ink);
+    padding: 0;
+  }
+  .nav-inner {
+    display: flex; align-items: center; justify-content: space-between;
+    height: 64px;
+  }
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+  }
+  .nav-logo span { color: var(--rust); font-style: italic; }
+  .nav-links { display: flex; gap: 0; }
+  .nav-links a {
+    font-size: 0.82rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-mid);
+    padding: 8px 16px;
+    border-left: 1px solid var(--border);
+    transition: 0.2s;
+  }
+  .nav-links a:first-child { border-left: none; }
+  .nav-links a:hover { color: var(--rust); background: var(--cream-dark); }
+
+  /* ─── HERO ─── */
+  .hero {
+    border-bottom: 2px solid var(--ink);
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-layout {
+    display: grid;
+    grid-template-columns: 1fr 420px;
+    min-height: 88vh;
+  }
+  .hero-left {
+    padding: 60px 60px 60px 28px;
+    border-right: 2px solid var(--ink);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .hero-tag {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.78rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--rust);
+    margin-bottom: 32px;
+  }
+  .hero-tag::before {
+    content: ''; width: 32px; height: 2px; background: var(--rust);
+  }
+  .hero-name {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3.8rem, 8vw, 7.5rem);
+    line-height: 0.95;
+    font-weight: 900;
+    letter-spacing: -3px;
+    margin-bottom: 28px;
+  }
+  .hero-name em {
+    font-style: italic;
+    color: var(--rust);
+  }
+  .hero-role {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.9rem;
+    letter-spacing: 0.05em;
+    color: var(--ink-light);
+    border-top: 1px solid var(--border);
+    padding-top: 20px;
+    margin-bottom: 32px;
+  }
+  .hero-bio {
+    font-size: 1.05rem;
+    color: var(--ink-mid);
+    max-width: 580px;
+    line-height: 1.75;
+    margin-bottom: 40px;
+    font-weight: 300;
+  }
+  .hero-actions { display: flex; gap: 16px; flex-wrap: wrap; }
+  .btn-ink {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: var(--ink); color: var(--cream);
+    padding: 14px 28px; font-weight: 500; font-size: 0.88rem;
+    letter-spacing: 0.04em; border: 2px solid var(--ink);
+    transition: 0.25s; cursor: pointer;
+  }
+  .btn-ink:hover { background: var(--rust); border-color: var(--rust); }
+  .btn-outline {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: transparent; color: var(--ink);
+    padding: 14px 28px; font-weight: 500; font-size: 0.88rem;
+    letter-spacing: 0.04em; border: 2px solid var(--ink);
+    transition: 0.25s; cursor: pointer;
+  }
+  .btn-outline:hover { background: var(--ink); color: var(--cream); }
+
+  .hero-right {
+    display: flex; flex-direction: column;
+  }
+  .hero-photo-wrap {
+    flex: 1;
+    background: var(--ink-mid);
+    position: relative;
+    overflow: hidden;
+    min-height: 420px;
+  }
+  .hero-photo-wrap img {
+    width: 100%; height: 100%;
+    object-fit: cover; object-position: center top;
+    filter: grayscale(15%);
+    transition: transform 0.6s ease;
+  }
+  .hero-photo-wrap:hover img { transform: scale(1.03); }
+  .hero-photo-overlay {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    background: linear-gradient(transparent, rgba(26,20,16,0.7));
+    padding: 28px 20px 20px;
+  }
+  .hero-photo-overlay span {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(245,240,232,0.8);
+  }
+  .hero-stats {
+    border-top: 2px solid var(--ink);
+    display: grid; grid-template-columns: repeat(3, 1fr);
+  }
+  .stat-item {
+    padding: 20px 16px;
+    border-right: 1px solid var(--border);
+    text-align: center;
+  }
+  .stat-item:last-child { border-right: none; }
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem; font-weight: 900; color: var(--rust);
+    display: block; line-height: 1;
+  }
+  .stat-label {
+    font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--ink-light); margin-top: 6px; display: block;
+  }
+
+  /* ─── SECTIONS ─── */
+  section { border-bottom: 2px solid var(--ink); }
+
+  .section-header {
+    border-bottom: 1px solid var(--border);
+    padding: 32px 28px 20px;
+    display: flex; align-items: baseline; gap: 20px;
+  }
+  .section-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.78rem; letter-spacing: 0.1em;
+    color: var(--rust); text-transform: uppercase;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+    font-weight: 700; letter-spacing: -1px;
+  }
+  .section-body { padding: 36px 28px; }
+
+  /* ─── ABOUT ─── */
+  .about-grid {
+    display: grid; grid-template-columns: 1.5fr 1fr; gap: 60px;
+  }
+  .about-lead {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.35rem; font-weight: 400; font-style: italic;
+    color: var(--ink-mid); line-height: 1.65;
+    margin-bottom: 24px;
+    border-left: 4px solid var(--rust);
+    padding-left: 20px;
+  }
+  .about-text {
+    font-size: 1rem; color: var(--ink-mid); font-weight: 300;
+    line-height: 1.8; margin-bottom: 16px;
+  }
+  .about-sidebar { }
+  .sidebar-block {
+    padding: 20px 0;
+    border-bottom: 1px solid var(--border-light);
+  }
+  .sidebar-block:last-child { border-bottom: none; }
+  .sidebar-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--rust);
+    margin-bottom: 10px;
+  }
+  .sidebar-text {
+    font-size: 0.92rem; color: var(--ink-mid); font-weight: 300;
+  }
+  .strength-list { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+  .strength-item {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 0.9rem; color: var(--ink-mid);
+  }
+  .strength-item::before {
+    content: '→'; color: var(--rust); font-size: 0.85rem; flex-shrink: 0;
+  }
+
+  /* ─── SKILLS ─── */
+  .skills-layout {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 0; border: 1px solid var(--border);
+  }
+  .skill-column {
+    padding: 28px 24px;
+    border-right: 1px solid var(--border);
+  }
+  .skill-column:last-child { border-right: none; }
+  .skill-col-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.05rem; font-weight: 700;
+    margin-bottom: 18px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--ink);
+  }
+  .skill-tag {
+    display: inline-block;
+    font-size: 0.82rem; font-weight: 400;
+    color: var(--ink-mid);
+    background: var(--warm-white);
+    border: 1px solid var(--border);
+    padding: 6px 12px; margin: 4px 4px 4px 0;
+    transition: 0.2s;
+  }
+  .skill-tag:hover { background: var(--ink); color: var(--cream); border-color: var(--ink); }
+
+  .tools-strip {
+    margin-top: 36px;
+    border: 1px solid var(--border);
+    padding: 24px;
+    background: var(--warm-white);
+  }
+  .tools-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--ink-light); margin-bottom: 16px;
+  }
+  .tools-wrap { display: flex; flex-wrap: wrap; gap: 10px; }
+  .tool-pill {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.78rem;
+    border: 1.5px solid var(--ink);
+    padding: 7px 14px;
+    color: var(--ink);
+    letter-spacing: 0.04em;
+    transition: 0.2s;
+  }
+  .tool-pill:hover { background: var(--rust); border-color: var(--rust); color: white; }
+
+  /* ─── PROJECT ─── */
+  .project-featured {
+    display: grid; grid-template-columns: 1fr 380px;
+    border: 1px solid var(--border);
+  }
+  .project-main { padding: 36px; border-right: 1px solid var(--border); }
+  .project-kicker {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--rust); margin-bottom: 12px;
+  }
+  .project-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem; font-weight: 700; line-height: 1.2;
+    margin-bottom: 16px; letter-spacing: -0.5px;
+  }
+  .project-role {
+    display: inline-block;
+    font-size: 0.82rem; font-weight: 500;
+    background: var(--ink); color: var(--cream);
+    padding: 5px 14px; margin-bottom: 20px;
+    letter-spacing: 0.04em;
+  }
+  .project-desc {
+    font-size: 0.98rem; color: var(--ink-mid); font-weight: 300;
+    line-height: 1.75; margin-bottom: 24px;
+  }
+  .project-responsibilities { display: flex; flex-direction: column; gap: 10px; }
+  .resp-item {
+    display: flex; gap: 12px; align-items: flex-start;
+    font-size: 0.92rem; color: var(--ink-mid); font-weight: 300;
+  }
+  .resp-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem; color: var(--rust);
+    flex-shrink: 0; padding-top: 2px; font-weight: 500;
+  }
+  .project-sidebar { padding: 28px; background: var(--warm-white); }
+  .proj-meta-block { margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid var(--border-light); }
+  .proj-meta-block:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+  .proj-meta-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--ink-light); margin-bottom: 8px;
+  }
+  .proj-meta-val { font-size: 0.9rem; color: var(--ink-mid); font-weight: 400; line-height: 1.55; }
+
+  /* ─── EDUCATION / JOURNEY ─── */
+  .edu-timeline { display: flex; flex-direction: column; gap: 0; }
+  .edu-row {
+    display: grid; grid-template-columns: 160px 1fr;
+    border-bottom: 1px solid var(--border-light);
+    padding: 28px 0;
+  }
+  .edu-row:last-child { border-bottom: none; }
+  .edu-year {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.85rem; color: var(--ink-light);
+    padding-top: 4px; letter-spacing: 0.04em;
+  }
+  .edu-content { }
+  .edu-degree {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem; font-weight: 700; margin-bottom: 4px;
+  }
+  .edu-inst {
+    font-size: 0.88rem; color: var(--ink-light); font-weight: 300; margin-bottom: 6px;
+  }
+  .edu-badge {
+    display: inline-block;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 4px 10px;
+    border: 1px solid var(--sage);
+    color: var(--sage);
+  }
+
+  /* ─── CERTIFICATIONS ─── */
+  .cert-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;
+  }
+  .cert-card {
+    border: 1px solid var(--border);
+    padding: 22px; background: var(--warm-white);
+    transition: 0.25s;
+    position: relative; overflow: hidden;
+  }
+  .cert-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; width: 4px; height: 100%;
+    background: var(--rust);
+  }
+  .cert-card:hover { border-color: var(--rust); transform: translateX(4px); }
+  .cert-issuer {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--rust); margin-bottom: 8px;
+  }
+  .cert-name {
+    font-size: 0.95rem; font-weight: 500; color: var(--ink);
+  }
+
+  /* ─── CONTACT ─── */
+  .contact-layout {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 60px;
+  }
+  .contact-left { }
+  .contact-headline {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.2rem; font-weight: 700; font-style: italic;
+    line-height: 1.25; margin-bottom: 20px; letter-spacing: -0.5px;
+  }
+  .contact-note {
+    font-size: 0.95rem; color: var(--ink-mid); font-weight: 300;
+    line-height: 1.75; margin-bottom: 32px;
+  }
+  .contact-right { }
+  .contact-item {
+    display: flex; flex-direction: column; gap: 4px;
+    padding: 16px 0; border-bottom: 1px solid var(--border-light);
+  }
+  .contact-item:last-child { border-bottom: none; }
+  .contact-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--ink-light);
+  }
+  .contact-val {
+    font-size: 0.95rem; color: var(--ink); font-weight: 400;
+    transition: 0.2s;
+  }
+  .contact-val a:hover { color: var(--rust); }
+
+  /* ─── FOOTER ─── */
+  footer {
+    background: var(--ink); color: var(--cream);
+    padding: 32px 28px;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 16px;
+  }
+  .footer-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem; font-weight: 700;
+  }
+  .footer-name span { font-style: italic; color: #c4875a; }
+  .footer-copy {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem; letter-spacing: 0.08em;
+    color: rgba(245,240,232,0.5);
+  }
+
+  /* ─── SCROLL REVEAL ─── */
+  .sr { opacity: 0; transform: translateY(24px); transition: opacity 0.65s ease, transform 0.65s ease; }
+  .sr.visible { opacity: 1; transform: none; }
+  .sr-delay-1 { transition-delay: 0.1s; }
+  .sr-delay-2 { transition-delay: 0.2s; }
+  .sr-delay-3 { transition-delay: 0.3s; }
+
+  /* ─── HORIZONTAL RULE DECORATION ─── */
+  .divider {
+    display: flex; align-items: center; gap: 16px;
+    margin: 28px 0;
+    color: var(--ink-light);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase;
+  }
+  .divider::before, .divider::after {
+    content: ''; flex: 1; height: 1px; background: var(--border);
+  }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 900px) {
+    .hero-layout { grid-template-columns: 1fr; }
+    .hero-right { border-top: 2px solid var(--ink); }
+    .hero-photo-wrap { min-height: 360px; }
+    .hero-left { padding: 40px 28px; }
+    .about-grid { grid-template-columns: 1fr; gap: 36px; }
+    .skills-layout { grid-template-columns: 1fr; }
+    .skill-column { border-right: none; border-bottom: 1px solid var(--border); }
+    .skill-column:last-child { border-bottom: none; }
+    .project-featured { grid-template-columns: 1fr; }
+    .project-sidebar { border-top: 1px solid var(--border); }
+    .contact-layout { grid-template-columns: 1fr; gap: 36px; }
+    .cert-grid { grid-template-columns: 1fr; }
+    .nav-links { display: none; }
+    .edu-row { grid-template-columns: 120px 1fr; gap: 16px; }
+  }
+  @media (max-width: 600px) {
+    .hero-stats { grid-template-columns: 1fr; }
+    .stat-item { border-right: none; border-bottom: 1px solid var(--border-light); }
+    .hero-name { letter-spacing: -1.5px; }
+    .edu-row { grid-template-columns: 1fr; }
+    .edu-year { margin-bottom: 6px; }
+    footer { flex-direction: column; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="container nav-inner">
+    <div class="nav-logo">Gowsikan <span>LV</span></div>
+    <div class="nav-links">
+      <a href="#about">About</a>
+      <a href="#skills">Skills</a>
+      <a href="#project">Project</a>
+      <a href="#journey">Journey</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-layout">
+    <div class="hero-left">
+      <div>
+        <div class="hero-tag sr">Software Test Engineer</div>
+        <h1 class="hero-name sr sr-delay-1">
+          Gowsikan<br><em>LV</em>
+        </h1>
+        <div class="hero-role sr sr-delay-2">
+          Manual Testing · Automation QA · Accessibility Testing · Java
+        </div>
+        <p class="hero-bio sr sr-delay-2">
+          An aspiring Software Test Engineer with internship experience at Indium Software. Passionate about building reliable, high-quality, and user-friendly software through careful testing and structured quality assurance practices.
+        </p>
+        <div class="hero-actions sr sr-delay-3">
+          <a href="resume.pdf" download class="btn-ink">↓ Download Resume</a>
+          <a href="#contact" class="btn-outline">Get in Touch →</a>
+        </div>
+      </div>
+      <div></div>
+    </div>
+    <div class="hero-right">
+      <div class="hero-photo-wrap">
+        <img src="profile.png" alt="Gowsikan LV"/>
+        <div class="hero-photo-overlay">
+          <span>Karaikudi, Tamil Nadu · Open to Work</span>
+        </div>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-item">
+          <span class="stat-num">4+</span>
+          <span class="stat-label">Certifications</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-num">10+</span>
+          <span class="stat-label">QA Skills</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-num">2025</span>
+          <span class="stat-label">Graduate</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-header">
+    <span class="section-num">01</span>
+    <h2 class="section-title">About Me</h2>
+  </div>
+  <div class="section-body">
+    <div class="about-grid">
+      <div>
+        <p class="about-lead sr">
+          "Passionate about finding bugs, improving software quality, and helping teams deliver reliable digital experiences."
+        </p>
+        <p class="about-text sr">
+          I'm a B.Sc. Computer Science graduate who completed an internship at <strong>Indium Software</strong>, where I gained hands-on experience in software testing including automation and accessibility. I have a strong foundation in Manual Testing, Selenium automation with Java, and accessibility testing using WCAG guidelines and NVDA screen reader.
+        </p>
+        <p class="about-text sr">
+          Currently, I'm pursuing my MCA from <strong>Alagappa University</strong> (ODL) while actively building my skills and seeking entry-level opportunities as a Software Test Engineer or Software Engineer. I'm proficient in Java, and familiar with HTML, CSS, and JavaScript.
+        </p>
+        <div class="divider">Strengths</div>
+        <div class="strength-list sr">
+          <div class="strength-item">Strong understanding of SDLC and STLC concepts</div>
+          <div class="strength-item">Skilled in test case design, execution & defect reporting</div>
+          <div class="strength-item">Hands-on accessibility testing with WCAG & NVDA</div>
+          <div class="strength-item">Growing proficiency in Selenium WebDriver & TestNG</div>
+          <div class="strength-item">Attention to detail with a quality-first mindset</div>
+        </div>
+      </div>
+      <div class="about-sidebar sr">
+        <div class="sidebar-block">
+          <div class="sidebar-label">Career Goal</div>
+          <div class="sidebar-text">To begin my career as a Software Test Engineer and contribute through careful testing, clear defect reporting, and continuous improvement.</div>
+        </div>
+        <div class="sidebar-block">
+          <div class="sidebar-label">Current Focus</div>
+          <div class="sidebar-text">Selenium WebDriver, TestNG, Java, SQL, Postman, and modern QA workflows for real job readiness.</div>
+        </div>
+        <div class="sidebar-block">
+          <div class="sidebar-label">Internship</div>
+          <div class="sidebar-text">Indium Software — hands-on experience in software testing, accessibility testing, and quality engineering practices.</div>
+        </div>
+        <div class="sidebar-block">
+          <div class="sidebar-label">Location</div>
+          <div class="sidebar-text">Karaikudi, Tamil Nadu · Open to Relocation</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="section-header">
+    <span class="section-num">02</span>
+    <h2 class="section-title">Skills & Expertise</h2>
+  </div>
+  <div class="section-body">
+    <div class="skills-layout sr">
+      <div class="skill-column">
+        <div class="skill-col-title">Manual Testing</div>
+        <span class="skill-tag">SDLC</span>
+        <span class="skill-tag">STLC</span>
+        <span class="skill-tag">Test Case Design</span>
+        <span class="skill-tag">Test Execution</span>
+        <span class="skill-tag">Defect Reporting</span>
+        <span class="skill-tag">Functional Testing</span>
+        <span class="skill-tag">Regression Testing</span>
+        <span class="skill-tag">Smoke Testing</span>
+        <span class="skill-tag">Sanity Testing</span>
+      </div>
+      <div class="skill-column">
+        <div class="skill-col-title">Automation & Programming</div>
+        <span class="skill-tag">Selenium WebDriver</span>
+        <span class="skill-tag">TestNG</span>
+        <span class="skill-tag">Java</span>
+        <span class="skill-tag">SQL</span>
+        <span class="skill-tag">HTML</span>
+        <span class="skill-tag">CSS</span>
+        <span class="skill-tag">JavaScript</span>
+        <br><br>
+        <div class="skill-col-title" style="margin-top: 16px;">Accessibility Testing</div>
+        <span class="skill-tag">WCAG Guidelines</span>
+        <span class="skill-tag">NVDA Screen Reader</span>
+        <span class="skill-tag">Keyboard Navigation</span>
+        <span class="skill-tag">ARIA Roles</span>
+        <span class="skill-tag">Contrast & Labels</span>
+        <span class="skill-tag">Alt Text Testing</span>
+      </div>
+      <div class="skill-column">
+        <div class="skill-col-title">Professional Skills</div>
+        <span class="skill-tag">Attention to Detail</span>
+        <span class="skill-tag">Analytical Thinking</span>
+        <span class="skill-tag">Problem Solving</span>
+        <span class="skill-tag">Communication</span>
+        <span class="skill-tag">Quality Mindset</span>
+        <span class="skill-tag">Team Collaboration</span>
+      </div>
+    </div>
+
+    <div class="tools-strip sr">
+      <div class="tools-label">Tools & Platforms</div>
+      <div class="tools-wrap">
+        <span class="tool-pill">Selenium WebDriver</span>
+        <span class="tool-pill">JIRA</span>
+        <span class="tool-pill">TestNG</span>
+        <span class="tool-pill">Postman</span>
+        <span class="tool-pill">Git / GitHub</span>
+        <span class="tool-pill">Maven</span>
+        <span class="tool-pill">Eclipse IDE</span>
+        <span class="tool-pill">Chrome DevTools</span>
+        <span class="tool-pill">NVDA</span>
+        <span class="tool-pill">Axe DevTools</span>
+        <span class="tool-pill">Lighthouse</span>
+        <span class="tool-pill">WAVE</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECT -->
+<section id="project">
+  <div class="section-header">
+    <span class="section-num">03</span>
+    <h2 class="section-title">Project</h2>
+  </div>
+  <div class="section-body">
+    <div class="project-featured sr">
+      <div class="project-main">
+        <div class="project-kicker">Capstone Project</div>
+        <h3 class="project-title">MakeMyTrip Website Testing</h3>
+        <span class="project-role">Role: Software Tester</span>
+        <p class="project-desc">
+          Performed manual and automation testing on the MakeMyTrip website to verify major functionalities such as login, flight search, hotel booking, and form validations. This project helped apply testing concepts practically and understand how QA supports real user workflows in a production-scale web application.
+        </p>
+        <div class="divider">Responsibilities</div>
+        <div class="project-responsibilities">
+          <div class="resp-item"><span class="resp-num">01</span><span>Created and executed manual test cases for multiple application modules.</span></div>
+          <div class="resp-item"><span class="resp-num">02</span><span>Performed functional testing and regression testing on key user workflows.</span></div>
+          <div class="resp-item"><span class="resp-num">03</span><span>Identified, documented, and reported defects found during testing sessions.</span></div>
+          <div class="resp-item"><span class="resp-num">04</span><span>Automated basic test scenarios using Selenium WebDriver with Java.</span></div>
+          <div class="resp-item"><span class="resp-num">05</span><span>Validated website functionality across different test scenarios and conditions.</span></div>
+        </div>
+      </div>
+      <div class="project-sidebar">
+        <div class="proj-meta-block">
+          <div class="proj-meta-label">Type</div>
+          <div class="proj-meta-val">Web Application Testing</div>
+        </div>
+        <div class="proj-meta-block">
+          <div class="proj-meta-label">Testing Approach</div>
+          <div class="proj-meta-val">Manual Testing<br>Automation Testing</div>
+        </div>
+        <div class="proj-meta-block">
+          <div class="proj-meta-label">Modules Covered</div>
+          <div class="proj-meta-val">Login · Flight Search · Hotel Booking · Form Validation</div>
+        </div>
+        <div class="proj-meta-block">
+          <div class="proj-meta-label">Testing Types</div>
+          <div class="proj-meta-val">Functional · Regression · Manual Validation</div>
+        </div>
+        <div class="proj-meta-block">
+          <div class="proj-meta-label">Automation Stack</div>
+          <div class="proj-meta-val">Selenium WebDriver + Java + TestNG</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- JOURNEY -->
+<section id="journey">
+  <div class="section-header">
+    <span class="section-num">04</span>
+    <h2 class="section-title">Education & Journey</h2>
+  </div>
+  <div class="section-body">
+    <div class="edu-timeline">
+      <div class="edu-row sr">
+        <div class="edu-year">2025 – Present</div>
+        <div class="edu-content">
+          <div class="edu-degree">MCA – Master of Computer Applications</div>
+          <div class="edu-inst">Alagappa University, Karaikudi · Open & Distance Learning (ODL)</div>
+          <span class="edu-badge">Pursuing</span>
+        </div>
+      </div>
+      <div class="edu-row sr sr-delay-1">
+        <div class="edu-year">2022 – 2025</div>
+        <div class="edu-content">
+          <div class="edu-degree">B.Sc. Computer Science</div>
+          <div class="edu-inst">Bishop Heber College, Trichy</div>
+          <span class="edu-badge" style="border-color: var(--ink-mid); color: var(--ink-mid);">Completed</span>
+        </div>
+      </div>
+      <div class="edu-row sr sr-delay-2">
+        <div class="edu-year">Internship</div>
+        <div class="edu-content">
+          <div class="edu-degree">Software Testing Internship</div>
+          <div class="edu-inst">Indium Software · Manual Testing · Automation · Accessibility</div>
+          <span class="edu-badge">Completed</span>
+        </div>
+      </div>
+      <div class="edu-row sr sr-delay-3">
+        <div class="edu-year">Goal</div>
+        <div class="edu-content">
+          <div class="edu-degree">Software Test Engineer / Software Engineer</div>
+          <div class="edu-inst">Actively seeking entry-level roles in QA and software development</div>
+          <span class="edu-badge" style="border-color: var(--rust); color: var(--rust);">Open to Work</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider" style="margin-top: 40px;">Certifications</div>
+    <div class="cert-grid sr">
+      <div class="cert-card">
+        <div class="cert-issuer">Indium Software</div>
+        <div class="cert-name">Quality Engineering</div>
+      </div>
+      <div class="cert-card">
+        <div class="cert-issuer">Indium Software</div>
+        <div class="cert-name">Accessibility Testing</div>
+      </div>
+      <div class="cert-card">
+        <div class="cert-issuer">Bishop Heber College</div>
+        <div class="cert-name">Employability Skills</div>
+      </div>
+      <div class="cert-card">
+        <div class="cert-issuer">Dubai Future Foundation</div>
+        <div class="cert-name">One Million Prompters Program</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-header">
+    <span class="section-num">05</span>
+    <h2 class="section-title">Contact</h2>
+  </div>
+  <div class="section-body">
+    <div class="contact-layout">
+      <div class="contact-left sr">
+        <h3 class="contact-headline">Let's build quality software together.</h3>
+        <p class="contact-note">
+          I'm open to internships, entry-level QA roles, and professional networking. Whether you have a testing role or just want to connect, feel free to reach out — I'd love to hear from you.
+        </p>
+        <a href="mailto:gowsikanlakshmanan@gmail.com" class="btn-ink">Send an Email →</a>
+      </div>
+      <div class="contact-right sr sr-delay-1">
+        <div class="contact-item">
+          <span class="contact-label">Name</span>
+          <span class="contact-val">Gowsikan LV</span>
+        </div>
+        <div class="contact-item">
+          <span class="contact-label">Phone</span>
+          <span class="contact-val"><a href="tel:+919894341940">+91 9894341940</a></span>
+        </div>
+        <div class="contact-item">
+          <span class="contact-label">Email</span>
+          <span class="contact-val"><a href="mailto:gowsikanlakshmanan@gmail.com">gowsikanlakshmanan@gmail.com</a></span>
+        </div>
+        <div class="contact-item">
+          <span class="contact-label">Location</span>
+          <span class="contact-val">Karaikudi, Tamil Nadu</span>
+        </div>
+        <div class="contact-item">
+          <span class="contact-label">LinkedIn</span>
+          <span class="contact-val"><a href="https://www.linkedin.com/in/gowsikan-lv-08431725a" target="_blank">linkedin.com/in/gowsikan-lv</a></span>
+        </div>
+        <div class="contact-item">
+          <span class="contact-label">GitHub</span>
+          <span class="contact-val"><a href="https://github.com/gowsi12303" target="_blank">github.com/gowsi12303</a></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-name">Gowsikan <span>LV</span></div>
+  <div class="footer-copy">© 2026 · Software Test Engineer Portfolio</div>
+</footer>
+
+<script>
+  // Scroll reveal
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.sr').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
